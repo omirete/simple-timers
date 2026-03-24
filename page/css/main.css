@@ -57,14 +57,22 @@ body {
 /* Add timer form */
 .add-timer-form {
     display: flex;
+    align-items: center;
     margin-top: 20px;
+}
+
+.add-timer-form span {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 0 6px;
+    line-height: 1;
 }
 
 .add-timer-form input {
     padding: 10px;
     font-size: 1rem;
-    margin-right: 10px;
-    width: 100px;
+    margin-right: 0;
+    width: 70px;
     text-align: center;
 }
 
@@ -72,6 +80,7 @@ body {
     padding: 10px 20px;
     font-size: 1rem;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 /* Fullscreen countdown display */
@@ -107,6 +116,30 @@ body {
 
 .flash {
     animation: flash 0.5s alternate infinite;
+}
+
+.flash .cancel-btn {
+    display: none !important;
+}
+
+.flash .stop-message {
+    visibility: visible;
+}
+
+/* Countdown content wrapper */
+.countdown-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* "Click anywhere to stop" message */
+.stop-message {
+    visibility: hidden;
+    font-size: 2.5vw;
+    font-weight: normal;
+    opacity: 0.75;
+    margin-top: 0.3em;
 }
 
 /* Cancel (X) button */

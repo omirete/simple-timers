@@ -5,7 +5,8 @@ const timeText = document.querySelector(".time-text");
 const buttonContainer = document.querySelector(".button-container");
 const cancelBtn = document.querySelector(".cancel-btn");
 const addTimerForm = document.querySelector(".add-timer-form");
-const timerInput = addTimerForm.querySelector('input[name="timer-seconds"]');
+const timerMinInput = addTimerForm.querySelector('input[name="timer-minutes"]');
+const timerSecInput = addTimerForm.querySelector('input[name="timer-seconds"]');
 
 // State
 let intervalId = null;
@@ -71,12 +72,15 @@ function renderCustomTimers() {
  */
 function onAddTimer(e) {
     e.preventDefault();
-    const val = parseInt(timerInput.value, 10);
-    if (val > 0) {
-        customTimers.push(val);
+    const mins = parseInt(timerMinInput.value, 10) || 0;
+    const secs = parseInt(timerSecInput.value, 10) || 0;
+    const seconds = mins * 60 + secs;
+    if (seconds > 0 && (timerMinInput.value !== "" || timerSecInput.value !== "")) {
+        customTimers.push(seconds);
         saveCustomTimers();
         renderCustomTimers();
-        timerInput.value = "";
+        timerMinInput.value = "";
+        timerSecInput.value = "";
     }
 }
 

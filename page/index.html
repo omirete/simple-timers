@@ -22,20 +22,19 @@
             <div class="custom-timers"></div>
 
             <form class="add-timer-form">
-                <input
-                    type="number"
-                    min="1"
-                    name="timer-seconds"
-                    placeholder="Seconds"
-                    required
-                />
+                <input type="number" name="timer-minutes" min="0" placeholder="mm" />
+                <span>:</span>
+                <input type="number" name="timer-seconds" min="0" max="59" placeholder="ss" />
                 <button type="submit">Add Timer</button>
             </form>
         </div>
 
         <div class="countdown-display">
             <button class="cancel-btn">x</button>
-            <div class="time-text"></div>
+            <div class="countdown-content">
+                <div class="time-text"></div>
+                <div class="stop-message">(click anywhere to stop)</div>
+            </div>
         </div>
 
         <!-- Link to external JavaScript -->
