@@ -17,6 +17,11 @@ loadCustomTimers();
 // Event Listeners
 addTimerForm.addEventListener("submit", onAddTimer);
 cancelBtn.addEventListener("click", cancelCountdown);
+display.addEventListener("click", () => {
+    if (display.classList.contains("flash")) {
+        cancelCountdown();
+    }
+});
 
 /**
  * Load custom timers from localStorage
