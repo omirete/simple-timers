@@ -1,4 +1,4 @@
-const CACHE_NAME = 'timer-app-cache-v5';
+const CACHE_NAME = 'timer-app-cache-v__CACHE_VERSION__';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

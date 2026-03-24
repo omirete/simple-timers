@@ -208,7 +208,7 @@ function formatTime(seconds) {
 /**
  * Register service worker
  */
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
     navigator.serviceWorker.register('service-worker.js')
       .then(() => console.log('Service Worker Registered'))
       .catch(err => console.error('Service Worker Registration Failed:', err));
