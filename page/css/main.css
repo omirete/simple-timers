@@ -15,7 +15,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
+    height: 100%;
     justify-content: center;
 }
 
@@ -92,10 +92,9 @@ body {
     color: #fff;
     font-size: 15vw;
     font-weight: bold;
-    height: 100vh;
-    width: 100vw;
     text-align: center;
-    position: relative;
+    position: fixed;
+    inset: 0;
 }
 
 /* Flash animation when done */
