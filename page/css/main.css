@@ -6,6 +6,8 @@ body {
     width: 100%;
     font-family: sans-serif;
     background: #f0f0f0;
+    padding-top: env(safe-area-inset-top);
+    box-sizing: border-box;
 }
 
 /* Container for initial buttons */
