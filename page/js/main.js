@@ -206,6 +206,38 @@ function formatTime(seconds) {
 }
 
 /**
+ * Request fullscreen for a true full-screen PWA experience.
+ * - Tries immediately (works on Android without a gesture when launched as a PWA).
+ * - Falls back to first user touch/click (required by iOS and some Android builds).
+ * - Re-registers the listener whenever fullscreen is exited so it can be restored.
+ */
+function tryEnterFullscreen() {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req) req.call(el).catch(() => {});
+}
+
+tryEnterFullscreen();
+
+function onFullscreenChange() {
+    const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (!isFullscreen) {
+        // Re-enter on the next user interaction
+        ['click', 'touchstart'].forEach(evt =>
+            document.addEventListener(evt, tryEnterFullscreen, { once: true, passive: true })
+        );
+    }
+}
+
+document.addEventListener('fullscreenchange', onFullscreenChange);
+document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+// Ensure first touch also triggers fullscreen if the immediate call above was blocked
+['click', 'touchstart'].forEach(evt =>
+    document.addEventListener(evt, tryEnterFullscreen, { once: true, passive: true })
+);
+
+/**
  * Register service worker
  */
 if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
