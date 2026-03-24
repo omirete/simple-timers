@@ -116,9 +116,37 @@ function startCountdown(timeLeft) {
 function countdownFinished() {
     display.classList.add("flash");
     timeText.textContent = "0:00";
+    playAlarmSound();
+    // Flashing continues until the user presses the cancel button
+}
 
-    // After 5 seconds of flashing, reset the UI
-    setTimeout(resetUI, 5000);
+/**
+ * Play a soft 3-beep alarm using the Web Audio API
+ */
+function playAlarmSound() {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const beepCount = 3;
+    const beepDuration = 0.3; // seconds each beep lasts
+    const beepInterval = 1.0; // seconds between beep starts
+
+    for (let i = 0; i < beepCount; i++) {
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = 880;
+
+        const startTime = ctx.currentTime + i * beepInterval;
+        gainNode.gain.setValueAtTime(0, startTime);
+        gainNode.gain.linearRampToValueAtTime(0.7, startTime + 0.01);
+        gainNode.gain.linearRampToValueAtTime(0, startTime + beepDuration);
+
+        oscillator.start(startTime);
+        oscillator.stop(startTime + beepDuration);
+    }
 }
 
 /**
