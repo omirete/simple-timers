@@ -11,6 +11,7 @@ const timerSecInput = addTimerForm.querySelector('input[name="timer-seconds"]');
 // State
 let intervalId = null;
 let customTimers = [];
+let wakeLockSentinel = null;
 
 // Load and Render Timers on Page Load
 loadCustomTimers();
@@ -97,6 +98,8 @@ function removeCustomTimer(index) {
  * Start the countdown for a given time (in seconds)
  */
 function startCountdown(timeLeft) {
+    requestWakeLock();
+
     // Hide main UI, show countdown
     buttonContainer.style.display = "none";
     display.style.display = "flex";
@@ -118,6 +121,7 @@ function startCountdown(timeLeft) {
  * Handle the end of the countdown
  */
 function countdownFinished() {
+    requestWakeLock();
     display.classList.add("flash");
     timeText.textContent = "0:00";
     playAlarmSound();
@@ -167,10 +171,45 @@ function cancelCountdown() {
  * Reset the UI to initial state
  */
 function resetUI() {
+    releaseWakeLock();
     display.classList.remove("flash");
     display.style.display = "none";
     cancelBtn.style.display = "none";
     buttonContainer.style.display = "flex";
+}
+
+/**
+ * Keep the screen awake while the app is actively running a timer/alarm.
+ * Works in Android PWAs that implement the Wake Lock API.
+ * iOS currently has limited/no support, so this fails silently there.
+ */
+async function requestWakeLock() {
+    if (!("wakeLock" in navigator)) return;
+    if (document.visibilityState !== "visible") return;
+    if (wakeLockSentinel) return;
+
+    try {
+        wakeLockSentinel = await navigator.wakeLock.request("screen");
+        wakeLockSentinel.addEventListener("release", () => {
+            wakeLockSentinel = null;
+        });
+    } catch (_) {
+        // Ignore wake lock failures to avoid disrupting timer behavior
+    }
+}
+
+/**
+ * Release the wake lock when no timer/alarm is active.
+ */
+async function releaseWakeLock() {
+    if (!wakeLockSentinel) return;
+    try {
+        await wakeLockSentinel.release();
+    } catch (_) {
+        // Ignore release failures; sentinel listener will clear state when possible
+    } finally {
+        wakeLockSentinel = null;
+    }
 }
 
 /**
@@ -236,6 +275,15 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 ['click', 'touchstart'].forEach(evt =>
     document.addEventListener(evt, tryEnterFullscreen, { once: true, passive: true })
 );
+
+// Wake lock may be released automatically when the page is hidden.
+// Re-acquire it when the app becomes visible again and a timer/alarm is active.
+document.addEventListener("visibilitychange", () => {
+    const countdownActive = display.style.display === "flex";
+    if (document.visibilityState === "visible" && countdownActive) {
+        requestWakeLock();
+    }
+});
 
 /**
  * Register service worker
