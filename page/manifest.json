@@ -6,7 +6,7 @@
     "categories": ["timer", "countdown", "alarm"],
     "lang": "en",
     "dir": "ltr",
-    "start_url": "https://omirete.github.io/simple-timers/?utm_source=web_app_manifest",
+    "start_url": "https://omirete.github.io/simple-timers/?fullscreen=true&utm_source=web_app_manifest",
     "display": "fullscreen",
     "background_color": "#f0f0f0",
     "theme_color": "#f0f0f0",
